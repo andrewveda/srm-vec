@@ -5,6 +5,10 @@ async function loadLeaderboard() {
 
   const res = await fetch("https://script.google.com/macros/s/AKfycbwB2ax4j0XVtl9pGp5b-JOQE4_fT5JRW9z2_4ziZjAhLjuKLpywUHHavv6I163njiYk/exec");
   const data = await res.json();
+const columnDisplayNames = {
+  "MainQuests": "Videos",
+  "Wrong": "ELLL"
+};
 
   let currentSort = "Score"; 
   let ascending = false;
@@ -122,7 +126,7 @@ container.innerHTML = `
   const sortButtons = document.getElementById("sortButtons");
   sortOptions.forEach(col => {
     const btn = document.createElement("button");
-    btn.innerText = col === "MainQuests" ? "Sort by Videos" : `Sort by ${col}`;
+    btn.innerText = `Sort by ${columnDisplayNames[col] || col}`;
     btn.addEventListener("click", () => {
       if (currentSort === col) ascending = !ascending;
       else { currentSort = col; ascending = false; }
@@ -149,6 +153,11 @@ container.innerHTML = `
 
   // Render leaderboard
   const renderTable = () => {
+const columnDisplayNames = {
+  "MainQuests": "Videos",
+  "Wrong": "ELLL"
+};
+
     const sortedData = [...data].sort((a,b) => {
       let valA = a[currentSort], valB = b[currentSort];
       if(currentSort === "LastTest") { valA = new Date(valA); valB = new Date(valB); }
@@ -159,7 +168,8 @@ container.innerHTML = `
     sortedData.forEach((player, idx) => player.Rank = idx+1);
 
     let html = `<table id="leaderboardTable">
-      <thead><tr><th>Rank</th><th>Name</th><th>${currentSort}</th></tr></thead><tbody>`;
+      <thead><tr><th>Rank</th><th>Name</th><th>${columnDisplayNames[currentSort] || currentSort}</th>
+</tr></thead><tbody>`;
     
     sortedData.forEach((player,index) => {
       let rankDisplay = player.Rank;
